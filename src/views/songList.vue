@@ -1,0 +1,12 @@
+<template>
+    <div>
+        <div>歌单视图-尚未开发</div>
+    </div>
+</template>
+<style>
+    body{
+        background-color:#ff0000;
+    }
+</style>
+<script>
+</script>

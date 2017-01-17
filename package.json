@@ -15,6 +15,7 @@
   "dependencies": {
     "muse-ui": "^2.0.0-rc.2",
     "vue": "^2.1.0",
+    "vue-awesome-swiper": "^2.3.0",
     "vue-router": "^2.1.1",
     "vuex": "^2.1.1"
   },
@@ -61,6 +62,7 @@
     "karma-spec-reporter": "0.0.26",
     "karma-webpack": "^1.7.0",
     "keycode": "^2.1.8",
+    "less": "^2.7.2",
     "less-loader": "^2.2.3",
     "lolex": "^1.4.0",
     "mocha": "^3.1.0",
