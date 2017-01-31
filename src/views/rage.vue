@@ -1,5 +1,9 @@
 <template>
     <div>
+      <div class="loading" v-if="isloading" >
+
+      </div>
+      <div class="container" v-show="!isloading">
       <div id="slider">
         <swiper :options="swiperOption">
           <swiper-slide><img src="static/banner1.jpg" width="100%" alt=""></swiper-slide>
@@ -12,35 +16,10 @@
       <div class="wrapper">
       <div class="g-title song-list">推荐歌单 <router-link :to="{path: '/index/songList'}">更多></router-link></div>
       <mu-flexbox wrap="wrap" justify="space-around" class="box" :gutter="0">
-        <mu-flexbox-item basis="28%" class="item">
-          <div class="bar">1233万</div>
-          <img class="img-response" src="https://y.gtimg.cn/music/photo/radio/track_radio_199_13_1.jpg?max_age=2592000&max_age=2592000">
-          <div class="item-name">这里是名称这里是名称这里是名称这里是名称</div>
-        </mu-flexbox-item>
-        <mu-flexbox-item basis="28%" class="item">
-          <div class="bar">12万</div>
-          <img class="img-response" src="https://y.gtimg.cn/music/photo/radio/track_radio_199_13_1.jpg?max_age=2592000&max_age=2592000">
-          <div class="item-name">这里是名称这里是名称这里是名称这里是名称</div>
-        </mu-flexbox-item>
-        <mu-flexbox-item basis="28%" class="item">
-          <div class="bar">12万</div>
-          <img class="img-response" src="https://y.gtimg.cn/music/photo/radio/track_radio_199_13_1.jpg?max_age=2592000&max_age=2592000">
-          <div class="item-name">这里是名称这里是名称这里是名称这里是名称</div>
-        </mu-flexbox-item>
-        <mu-flexbox-item basis="28%" class="item">
-          <div class="bar">12万</div>
-          <img class="img-response" src="https://y.gtimg.cn/music/photo/radio/track_radio_199_13_1.jpg?max_age=2592000&max_age=2592000">
-          <div class="item-name">这里是名称这里是名称这里是名称这里是名称</div>
-        </mu-flexbox-item>
-        <mu-flexbox-item basis="28%" class="item">
-          <div class="bar">12万</div>
-          <img class="img-response" src="https://y.gtimg.cn/music/photo/radio/track_radio_199_13_1.jpg?max_age=2592000&max_age=2592000">
-          <div class="item-name">这里是名称这里是dddd名称这里是名称这里是名称</div>
-        </mu-flexbox-item>
-        <mu-flexbox-item basis="28%" class="item">
-          <div class="bar">12万</div>
-          <img class="img-response" src="https://y.gtimg.cn/music/photo/radio/track_radio_307_13_1.jpg?max_age=2592000&max_age=2592000">
-          <div class="item-name">这里是名称这里是名称这里是名称这里是名称</div>
+        <mu-flexbox-item basis="28%" class="item" v-for="item in playList">
+          <div class="bar">{{item.playCount}}万</div>
+          <img class="img-response" src="../../static/default_cover.png" :src="item.coverImgUrl">
+          <div class="item-name">{{item.name}}</div>
         </mu-flexbox-item>
       </mu-flexbox>
         <div class="g-title mv">推荐MV <router-link :to="{}">更多></router-link></div>
@@ -66,6 +45,7 @@
             <div class="mv-author">鹿晗</div>
           </mu-flexbox-item>
         </mu-flexbox>
+      </div>
       </div>
     </div>
 </template>
@@ -138,21 +118,59 @@
       color: #666;
     }
   }
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    background: #fff;
+    width: 3rem;
+    height: 3rem;
+    margin-top: 70%;
+    margin-left: -1.5rem;
+    background: url('../../static/rage_loading.png') no-repeat;
+    background-size: cover;
+    -webkit-animation: rotating 5s  linear infinite;
+    animation: rotating 5s linear infinite;
+  }
+
+  @keyframes rotating {
+      0%{
+        transform: rotate(0deg);
+      }
+      100%{
+        transform: rotate(360deg);
+      }
+  }
 </style>
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import api from '../api'
 export default {
   data () {
     return {
       swiperOption: {
         pagination: '.swiper-pagination',
         paginationClickable: true
-      }
+      },
+      isloading: true,
+      playList: [],
+      mvList: []
     }
   },
   components: {
     swiper,
     swiperSlide
+  },
+  created () {
+    this.get()
+  },
+  methods: {
+    get () {
+      this.$http.get(api.getPlayListByWhere('全部', 'hot', 0, true, 6)).then((res) => {
+        this.isloading = false
+        this.playList = res.data.playlists
+      })
+    }
   }
 }
 </script>

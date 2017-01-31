@@ -93,7 +93,7 @@ module.exports = {
     loaders: utils.cssLoaders({ sourceMap: useCssSourceMap }),
     postcss: [
       require('autoprefixer')({
-        browsers: ['last 2 versions']
+        browsers: ['last 7 versions']
       })
     ]
   }

@@ -26,8 +26,8 @@
               <div class="lyric-holder">
                 <div class="lrc-inner">
                   <p>歌词歌词歌词歌词歌词歌词歌词歌词歌词歌词</p>
-                  <p class="on">歌词歌词歌词歌词歌词歌词</p>               
-                </div>                
+                  <p class="on">歌词歌词歌词歌词歌词歌词</p>
+                </div>
               </div>
               <div class="process-bar">
                 <div class="pro">
@@ -45,7 +45,7 @@
                 <mu-icon-button class="btn d-prev"/>
                 <mu-icon-button class="btn d-play btn-big" @click="togglePlay" :class="{'d-pause': play}"/>
                 <mu-icon-button class="btn d-next"/>
-                <mu-icon-button class="btn d-list"/>                                
+                <mu-icon-button class="btn d-list"/>
               </div>
             </mu-flexbox-item>
           </mu-flexbox>
@@ -61,7 +61,7 @@
   .content {
     overflow: hidden;
     height: 100%;
-  }  
+  }
   .main {
     height: 100%;
   }
@@ -88,7 +88,7 @@
       .play-singer {
         font-size: 14px;
         color: #a8a7a7;
-        text-align: left;                
+        text-align: left;
         line-height: 1;
       }
     }
@@ -105,17 +105,17 @@
         background: url("../../static/stick_bg.png") no-repeat left -.4rem;
         background-size: cover;
         z-index: 8;
-        -webkit-transition: all 300ms ease-in;      
+        -webkit-transition: all 300ms ease-in;
         transition: all 300ms ease-in;
-        -webkit-transform-origin: left top;       
+        -webkit-transform-origin: left top;
         transform-origin: left top;
-        -webkit-transform: rotate(-20deg);      
+        -webkit-transform: rotate(-20deg);
         transform: rotate(-20deg);
       }
       .cd-wrapper {
         position: relative;
-        max-width: 65%;   
-        min-height: 80px;     
+        max-width: 65%;
+        min-height: 80px;
         padding: .7rem 1rem;
         border-radius: 50%;
         background: rgba(107, 107, 107, 0.3);
@@ -126,22 +126,22 @@
           height: 100%;
           top: 0;
           left: 0;
-          background: url('../../static/cd_wrapper.png') no-repeat center center;          
-          background-size: contain;          
+          background: url('../../static/cd_wrapper.png') no-repeat center center;
+          background-size: contain;
         }
-        img {          
+        img {
           width: 100%;
           height: 100%;
           min-height: 80px;
-          border-radius: 50%;        
+          border-radius: 50%;
         }
       }
     }
 
-    // cd播放状态样式 
+    // cd播放状态样式
     .cd-play {
-      .stick {  
-        background-position-y: -.7rem;      
+      .stick {
+        background-position-y: -.7rem;
        -webkit-transform: rotate(0deg);
         -moz-transform: rotate(0deg);
         -ms-transform: rotate(0deg);
@@ -150,8 +150,6 @@
     }
     .cd-rotate {
       -webkit-animation: rotating 10s  linear .3s infinite;
-      -moz-animation: rotating 10s  linear .3s infinite;
-      -ms-animation: rotating 10s  linear .3s infinite;
       animation: rotating 10s linear .3s infinite;
     }
 
@@ -205,7 +203,7 @@
         color: #fff;
         font-size: 16px;
       }
-    }    
+    }
   }
   // 进度条
   .pro {
@@ -219,9 +217,9 @@
     .time {
       color: #fff;
       font-size: 12px;
-      time {       
+      time {
         position: absolute;
-        top: 54%;      
+        top: 54%;
         opacity: .5;
       }
       #cur {
@@ -239,7 +237,7 @@
   .control-bar {
     .btn {
       width: 2.6rem;
-      height: 2.6rem;      
+      height: 2.6rem;
     }
     .d-mode {
       background: url("../../static/seq.png") no-repeat;
@@ -315,7 +313,7 @@
     overflow: hidden;
     width: 200%;
     height: 30px;
-    -webkit-animation: marquee 10s linear infinite;   
+    -webkit-animation: marquee 10s linear infinite;
     animation: marquee 10s linear infinite;
   }
 
@@ -323,7 +321,7 @@
   @-webkit-keyframes marquee {
     0% { left: 0; }
     100% { left: -100%; }
-  }  
+  }
   @keyframes marquee {
     0% { left:0; }
     100% { left: -100%; }
@@ -334,7 +332,7 @@
   @-webkit-keyframes rotating{
     0% { -webkit-transform:rotate(0deg); }
     100% { -webkit-transform:rotate(360deg); }
-  }  
+  }
   @keyframes rotating {
     0% { transform: rotate(0deg);}
     100% { transform: rotate(360deg);}

@@ -13,6 +13,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "muse-ui": "^2.0.0-rc.2",
     "vue": "^2.1.0",
     "vue-awesome-swiper": "^2.3.0",

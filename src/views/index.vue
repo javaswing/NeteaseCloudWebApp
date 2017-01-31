@@ -13,7 +13,9 @@
       </mu-tabs>
       </div>
       <div class="view">
+        <keep-alive>
         <router-view></router-view>
+        </keep-alive>
       </div>
     </div>
 </template>
@@ -31,19 +33,19 @@
     >.mu-tab-link {
       color: rgba(102,102,102,1);
     }
-    >.mu-tab-active{    
-      color: @primaryColor;            
+    >.mu-tab-active{
+      color: @primaryColor;
     }
   }
 
   .fixed-bar {
     position: fixed;
-    width: 100%;    
+    width: 100%;
     top:0;
     left: 0;
     z-index: 15;
   }
-  .view {    
+  .view {
     margin-top: 104px;
   }
 </style>
