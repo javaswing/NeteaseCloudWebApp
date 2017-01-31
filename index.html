@@ -16,6 +16,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no,minimal-ui">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
   <link href="http://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
+  <script>
+    ;(function (doc, win, undefined) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in win? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (clientWidth === undefined) return;
+              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+          if (doc.addEventListener === undefined) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false)
+        })(document, window);
+  </script>
 </head>
 <body>
 <div id="app"></div>

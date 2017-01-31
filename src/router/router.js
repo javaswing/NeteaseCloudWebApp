@@ -28,6 +28,12 @@ const router = new VueRouter({
       }
     ]
   }, {
+    path: '/playerDetail',
+    component: require('../views/playerDetail')
+  }, {
+    path: '/playListDetail',
+    component: require('../views/playListDetail')
+  }, {
     path: '*', redirect: '/index/rage'
   }]
 })

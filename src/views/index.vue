@@ -1,5 +1,6 @@
 <template>
     <div>
+      <div class="fixed-bar">
       <mu-appbar>
         <div class="logo" slot="left"></div>
         <mu-icon-button icon='search'  slot="right"/>
@@ -10,10 +11,14 @@
         <mu-tab value="leaderBoard" title="排行榜"/>
         <mu-tab value="hotSinger" title="热门歌手"/>
       </mu-tabs>
-      <router-view></router-view>
+      </div>
+      <div class="view">
+        <router-view></router-view>
+      </div>
     </div>
 </template>
 <style lang="less" scoped>
+  @import "../assets/theme.less";
   .logo {
     width: 150px;
     height: 48px;
@@ -21,11 +26,25 @@
     background-size: cover;
   }
   .view-tabs {
-    background-color: transparent;
+    background-color: #fff;
     color: rgba(0,0,0,.87);
-    .mu-tab-link {
+    >.mu-tab-link {
       color: rgba(102,102,102,1);
     }
+    >.mu-tab-active{    
+      color: @primaryColor;            
+    }
+  }
+
+  .fixed-bar {
+    position: fixed;
+    width: 100%;    
+    top:0;
+    left: 0;
+    z-index: 15;
+  }
+  .view {    
+    margin-top: 104px;
   }
 </style>
 <script>
