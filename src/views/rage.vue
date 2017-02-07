@@ -1,25 +1,28 @@
 <template>
     <div>
-      <div class="loading" v-if="isloading" >
-
+      <div class="loading-wrapper" v-if="isloading" >
+          <div class="loading"></div>
+          <div class="loading-txt">正在加载中</div>
       </div>
       <div class="container" v-show="!isloading">
       <div id="slider">
         <swiper :options="swiperOption">
-          <swiper-slide><img src="static/banner1.jpg" width="100%" alt=""></swiper-slide>
-          <swiper-slide><img src="static/banner2.jpg" width="100%" alt=""></swiper-slide>
-          <swiper-slide><img src="static/banner3.jpg" width="100%" alt=""></swiper-slide>
-          <swiper-slide><img src="static/banner4.jpg" width="100%" alt=""></swiper-slide>
+          <swiper-slide><img src="/static/banner1.jpg" class="banner-item"  alt=""></swiper-slide>
+          <swiper-slide><img src="/static/banner2.jpg" class="banner-item"  alt=""></swiper-slide>
+          <swiper-slide><img src="/static/banner3.jpg" class="banner-item"  alt=""></swiper-slide>
+          <swiper-slide><img src="/static/banner4.jpg" class="banner-item"  alt=""></swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
         </swiper>
       </div>
       <div class="wrapper">
       <div class="g-title song-list">推荐歌单 <router-link :to="{path: '/index/songList'}">更多></router-link></div>
       <mu-flexbox wrap="wrap" justify="space-around" class="box" :gutter="0">
-        <mu-flexbox-item basis="28%" class="item" v-for="item in playList">
-          <div class="bar">{{item.playCount}}万</div>
-          <img class="img-response" src="../../static/default_cover.png" :src="item.coverImgUrl">
+        <mu-flexbox-item basis="28%" class="item" :key="item.id" v-for="item in playList">
+          <router-link :to="{name: 'playListDetail',params: { id: item.id }}">
+          <div class="bar">{{item.playCount | formatCount}}</div>
+          <img class="item-img img-response" v-lazy="item.coverImgUrl" lazy="loading">
           <div class="item-name">{{item.name}}</div>
+          </router-link>
         </mu-flexbox-item>
       </mu-flexbox>
         <div class="g-title mv">推荐MV <router-link :to="{}">更多></router-link></div>
@@ -70,6 +73,14 @@
       color: #666;
     }
   }
+  // banner样式
+  .banner-item {
+    width: 100%;
+    height: 7.4rem;
+    background: url('../../static/banner-item-load.png') no-repeat;
+    background-size: cover;
+  }
+
   // 推荐歌单
   .song-list {
     background: url("../../static/aei.png") no-repeat left center;
@@ -79,6 +90,9 @@
     position: relative;
     margin: 0 5px 5px 10px;
     height: 100%;
+    a {
+      color: rgba(0, 0, 0, 0.87);
+    }
     .bar {
       position: absolute;
       top: 0;
@@ -90,9 +104,20 @@
       background-color: rgba(0,0,0,.2);
     }
 
+    &-img {
+      min-width:5rem;
+      min-height: 5rem;
+    }
+
+    &-img[lazy=loading] {
+      background: url('../../static/default_cover.png') no-repeat;
+      background-size: cover;
+    }
+
     &-name {
       overflow : hidden;
       font-size: 12px;
+      height: 1.7rem;
       text-overflow: ellipsis;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -132,6 +157,14 @@
     -webkit-animation: rotating 5s  linear infinite;
     animation: rotating 5s linear infinite;
   }
+  .loading-txt {
+    position: absolute;
+    top:0;
+    color: #4a4a4a;
+    margin-top: 90%;
+    width: 100%;
+    text-align:center;
+  }
 
   @keyframes rotating {
       0%{
@@ -170,6 +203,15 @@ export default {
         this.isloading = false
         this.playList = res.data.playlists
       })
+    }
+  },
+  filters: {
+    formatCount (v) {
+      if (v < 9999) {
+        return v
+      } else {
+        return (v / 10000).toFixed(0) + '万'
+      }
     }
   }
 }

@@ -1,85 +1,49 @@
 <template>
-    <div>
-        <div class="fixed-title">
+    <div style="margin-bottom:2.3rem;">
+        <div class="fixed-title" :style="{'background': 'rgba(206, 61, 62, '+ opacity +')'}">
             <mu-appbar>
-            <mu-icon-button icon='arrow_back'  slot="left"/>
+            <mu-icon-button icon='arrow_back' @click="back" slot="left"/>
             <div class="play-title">
-              <div class="play-name"><span>歌单</span></div>
-              <div class="play-singer"> 演唱者 </div>
-            </div>            
+              <div class="play-name"><span>{{fname}}</span></div>
+            </div>
           </mu-appbar>
-        </div> 
+        </div>
         <div class="playlist-info">
             <div class="info-wrapper">
                 <div class="info-gallery">
-                    <span>67万</span>
-                    <img src="http://p3.music.126.net/GMYVxUcu5hFNt2A_sDTdEw==/18632324046027839.jpg?param=500y500" alt="">
+                    <span>{{playCount | formatCount}}</span>
+                    <img :src="coverImgUrl" alt="">
                 </div>
                 <div class="info-title">
-                    <p class="titile">往后的时光都是崭新的丶谁也不许回头看</p>
+                    <p class="titile">{{name}}</p>
                     <p class="author">
-                        <mu-avatar slot="left" icon="folder" color="orange200" backgroundColor="pink400" :size="30" :iconSize="20"/>
-                        <span>作者</span>                    
+                        <mu-avatar slot="left"  :src="creator.avatarUrl" :size="30" :iconSize="20"/>
+                        <span>{{creator.nickname}}</span>
                     </p>
                 </div>
             </div>
             <div class="bg-mask"></div>
-            <div class="bg-player" id="backImg" style="background-image: url('http://p3.music.126.net/GMYVxUcu5hFNt2A_sDTdEw==/18632324046027839.jpg');"></div>
+            <div class="bg-player" id="backImg" :style="{'background-image':'url(' + coverImgUrl + ')'}" ></div>
         </div>
         <div class="playlist-holder">
             <div class="add-all">
                 <mu-flat-button label="播放全部" class="demo-flat-button" icon="add_circle_outline"/>
                 <mu-divider/>
             </div>
-            <div>           
-                <mu-list >
-                <div>
-                    <mu-list-item  :disableRipple="true" title="歌曲名称" describeText="这里是描述">
-                        <span slot="left" class="indexStyle">1</span>
-                    </mu-list-item>
-                    <mu-divider inset/>
-                </div>
-                <div>
-                    <mu-list-item  :disableRipple="true" title="歌曲名称" describeText="这里是描述">
-                        <span slot="left" class="indexStyle">2</span>
-                    </mu-list-item>
-                    <mu-divider inset/>
-                </div>
-                <div>
-                    <mu-list-item  :disableRipple="true" title="歌曲名称" describeText="这里是描述">
-                        <span slot="left" class="indexStyle">3</span>
-                    </mu-list-item>
-                    <mu-divider inset/>
-                </div>
-                <div>
-                    <mu-list-item  :disableRipple="true" title="歌曲名称" describeText="这里是描述">
-                        <span slot="left" class="indexStyle">4</span>
-                    </mu-list-item>
-                    <mu-divider inset/>
-                </div>
-                <div>
-                    <mu-list-item  :disableRipple="true" title="歌曲名称" describeText="这里是描述">
-                        <span slot="left" class="indexStyle">5</span>
-                    </mu-list-item>
-                    <mu-divider inset/>
-                </div>
-                <div>
-                    <mu-list-item  :disableRipple="true" title="歌曲名称" describeText="这里是描述">
-                        <span slot="left" class="indexStyle">6</span>
-                    </mu-list-item>
-                    <mu-divider inset/>
-                </div>
-                <div>
-                    <mu-list-item  :disableRipple="true" title="歌曲名称" describeText="这里是描述">
-                        <span slot="left" class="indexStyle">7</span>
+            <div>
+              <mu-circular-progress :size="40" class="center" v-if="isloading"/>
+                <mu-list :value="value" v-show="!isloading" @change="change">
+                <div v-for="(item, index) in list" @click="playAudio(item.id)">
+                    <mu-list-item  :disableRipple="true" :title="item.name" :describeText="item.artists[0].name">
+                        <span slot="left" class="indexStyle">{{index + 1}}</span>
                     </mu-list-item>
                     <mu-divider inset/>
                 </div>
                 </mu-list>
             </div>
             </mu-list>
-            </div>                
-        </div>       
+            </div>
+        </div>
     </div>
 </template>
 <style lang="less" scoped>
@@ -88,8 +52,8 @@
         top: 0;
         width: 100%;
         height: 56px;
-        left: 0;    
-        z-index: 15;    
+        left: 0;
+        z-index: 15;
     }
 
      // 修改默认的bar样式
@@ -112,26 +76,11 @@
         font-size: 14px;
       }
     }
-     .play-title {
-      height: 56px;
-      font-size: 18px;
-      color: #fff;
-      .play-name {
-        padding-top: 0.4rem;
-        line-height: 1.5;
-      }
-      .play-singer {
-        font-size: 12px;
-        color: #a8a7a7;
-        text-align: left;                
-        line-height: 1;
-      }
-    }
     // 歌单信息
     .playlist-info {
         position: relative;
-        padding: 60px .5rem 0 ;        
-        height: 10rem;        
+        padding: 60px .5rem 0 ;
+        height: 10rem;
     }
 
     .info-wrapper {
@@ -150,7 +99,7 @@
                 width: 100%;
                 left: 0;
                 top: 0;
-                font-size: 12px;                
+                font-size: 12px;
                 text-align: right;
                 background: rgba(0,0,0,.35);
                 z-index: 11;
@@ -164,19 +113,19 @@
         .info-title {
             float: left;
             width: 7.5rem;
-            margin-left: 1rem;            
+            margin-left: 1rem;
             .title {
                 font-size: 16px;
                 word-wrap: wrapper;
-            }    
+            }
             .author {
                 span {
                     display: inline-block;
                     font-size: 14px;
-                    vertical-align: top;                    
+                    vertical-align: top;
                     line-height: 30px;
                 }
-            }        
+            }
         }
     }
 
@@ -188,7 +137,7 @@
         .add-all {
             padding-left: .4rem;
         }
-    }    
+    }
 
     // 列表样式
     .indexStyle {
@@ -211,8 +160,8 @@
         background-repeat: no-repeat;
         background-size: cover;
         background-position: bottom right;
-        filter: blur(40px);   
-        -webkit-filter: blur(40px);                        
+        filter: blur(40px);
+        -webkit-filter: blur(40px);
         z-index: 1;
     }
     .bg-mask {
@@ -224,7 +173,87 @@
         background-color: #292a2b;
         background-color: rgba(0,0,0,.35);
         z-index: 2;
-    }   
+    }
+    .center {
+      display: block!important;
+      margin: 10% auto 0;
+    }
 </style>
 <script>
+import api from '../api'
+export default {
+  data () {
+    return {
+      coverImgUrl: '../../static/default_cover.png',
+      name: '歌单标题',
+      fname: '歌单',
+      playCount: 0,
+      description: '描述描述',
+      creator: {
+        'avatarUrl': '../../static/user-default.png',
+        'nickname': '昵称'
+      },
+      list: [],
+      opacity: 0,
+      value: 0,
+      isloading: false
+    }
+  },
+  // 解除keep-alive的缓存
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      vm.get()
+      window.onscroll = () => {
+        var opa = window.pageYOffset / 150
+        if (opa > 0.5) {
+          vm.fname = vm.name
+        } else {
+          vm.fname = '歌单'
+        }
+        vm.opacity = window.pageYOffset / 150
+      }
+    })
+  },
+  // 路由离开时清除onscroll事件
+  beforeRouteLeave: (to, from, next) => {
+    window.onscroll = null
+    next()
+  },
+  methods: {
+    back () {
+      this.$router.go(-1)
+    },
+    get () {
+      this.isloading = true
+      this.$http.get(api.getPlayListDetail(this.$route.params.id)).then((res) => {
+        this.list = res.data.result.tracks
+        this.playCount = res.data.result.playCount
+        this.name = res.data.result.name
+        this.description = res.data.result.description
+        this.coverImgUrl = res.data.result.coverImgUrl
+        this.creator = res.data.result.creator
+        this.isloading = false
+      })
+    },
+    change (val) {
+      this.value = val
+    },
+    playAudio (id) {
+      // 暂时歌曲，并重置进度条
+      document.getElementById('audioPlay').pause()
+      this.$store.commit('pause')
+      this.$store.commit('resetAudio')
+      this.$store.dispatch('getSong', id)
+    }
+  },
+  filters: {
+    formatCount (v) {
+      if (v < 9999) {
+        return v
+      } else {
+        return (v / 10000).toFixed(0) + '万'
+      }
+    }
+  }
+}
 </script>

@@ -14,7 +14,7 @@
       </div>
       <div class="view">
         <keep-alive>
-        <router-view></router-view>
+         <router-view></router-view>
         </keep-alive>
       </div>
     </div>
@@ -47,6 +47,7 @@
   }
   .view {
     margin-top: 104px;
+    margin-bottom: 2.3rem;
   }
 </style>
 <script>
@@ -54,6 +55,23 @@
     data () {
       return {
         activeTab: 'rage'
+      }
+    },
+    created () {
+      // 当created函数时监测路由信息,防止页面刷新tab高亮错误
+      var tmpArr = this.$route.path.split('/')
+      if (tmpArr[1] === 'index') {
+        this.handleTabChange(tmpArr[2])
+      }
+    },
+    // watch函数监测路由的变化,保持tab面板的高亮位置正确
+    watch: {
+      '$route' (to, from) {
+        const path = to.path
+        var tmpArr = path.split('/')
+        if (tmpArr[1] === 'index') {
+          this.handleTabChange(tmpArr[2])
+        }
       }
     },
     methods: {

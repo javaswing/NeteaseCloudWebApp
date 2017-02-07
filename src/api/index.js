@@ -1,4 +1,5 @@
-const _baseUrl = 'http://192.168.5.100:809/api/music'
+// const _baseUrl = 'http://vuetest-001-site1.btempurl.com/api/music'
+const _baseUrl = 'http://192.168.0.73:809/api/music'
 export default {
   getPlayListByWhere (cat, order, offset, total, limit) {
     return _baseUrl + '/topPlaylist?cat=' + cat + '&order=' + order + '&offset=' + offset + '&total=' + total + '&limit=' + limit

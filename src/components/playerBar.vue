@@ -2,35 +2,87 @@
   <div class="foot">
     <div class="player-mini">
       <div class="mini-content">
-        <audio id="audioPlay"></audio>
-        <div class="cover">
-          <img class="xmplogo" src="static/player-bar.png" alt="当我在这里">
+       <audio :src="audio.location" @timeupdate="updateTime" @canplay="canPlaySong" @ended="playNext" autoplay id="audioPlay"/>
+        <div class="cover" @click="showDetail">
+          <mu-circular-progress v-show="loading" :size="30"/>
+          <img class="xmplogo" :src="audio.albumPic" v-show="!loading" :alt="audio.name">
         </div>
         <div class="info">
-          <div class="name xmpname">歌曲名称</div>
-          <div class="artist xmpartist">作者</div>
-          <div class="control">
-            <mu-icon-button class="mini-btn player-list"/>
-            <mu-icon-button class="mini-btn player"/>
-            <mu-icon-button class="mini-btn next"/>
-          </div>
+          <div class="name xmpname">{{audio.name}}</div>
+          <div class="artist xmpartist">{{audio.singer}}</div>
+        </div>
+        <div class="control">
+          <mu-icon-button class="mini-btn player-list"/>
+          <mu-icon-button class="mini-btn player" :class="{pause: playing}" @click="toggleStatus"/>
+          <mu-icon-button class="mini-btn next" @click="playNext"/>
         </div>
         <div class="pro">
-          <div class="pro-load proload" :style="{'-webkit-transform':'translateX(' + loadedTime +'%)' }"></div>
-          <div class="pro-play proplay" :style="{'-webkit-transform':'translateX(' + playerTime +'%)' }"></div> </div>
+          <div class="pro-load proload" :style="{'-webkit-transform':'translateX(' + prBufferedTime +'%)' }"></div>
+          <div class="pro-play proplay" :style="{'-webkit-transform':'translateX(' + prCurrentTime +'%)' }"></div> </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-        loadedTime: 29,
-        playerTime: 10
+import { mapMutations, mapGetters } from 'vuex'
+export default {
+  data () {
+    return {
+      loadedTime: 29,
+      playerTime: 10
+    }
+  },
+  methods: {
+    showDetail () {
+      this.$router.push({ path: '/playerDetail/2' })
+      this.$store.commit('toggleDetail')
+    },
+    ...mapMutations([
+      'play',
+      'pause',
+      'playNext'
+    ]),
+    canPlaySong () {
+      this.$store.commit('closeLoading')
+      this.$store.commit('play')
+    },
+    toggleStatus () {
+      if (this.playing) {
+        document.getElementById('audioPlay').pause()
+        this.$store.commit('pause')
+      } else {
+        document.getElementById('audioPlay').play()
+        this.$store.commit('play')
+      }
+    },
+    // 更新进度条事件
+    updateTime () {
+      var vm = this
+      var time = parseInt(document.getElementById('audioPlay').currentTime)
+      // 防止在未加载完成时，切歌出现的错误
+      // Failed to execute 'end' on 'TimeRanges':
+      document.getElementById('audioPlay').onprogress = function () {
+        vm.$store.commit('updateBufferedTime', parseInt(document.getElementById('audioPlay').buffered.end(0)))
+      }
+      this.$store.commit('updateDurationTime', parseInt(document.getElementById('audioPlay').duration))
+      if (this.change) {
+        document.getElementById('audioPlay').currentTime = this.tmpCurrentTime
+        this.$store.commit('setChange', false)
+      } else {
+        this.$store.commit('updateCurrentTime', time)
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'audio',
+      'playing',
+      'loading',
+      'prBufferedTime',
+      'prCurrentTime'
+    ])
   }
+}
 </script>
 <style lang="less" scopoed>
   @import "../assets/theme.less";
@@ -55,14 +107,18 @@
     float: left;
     padding-left: 0.2rem;
     padding-top: 0.2rem;
+    background: ur('../../static/player-bar.png') no-repeat;
+    background-size: cover;
   }
   .player-mini .mini-content .cover img {
     width: 100%;
     height: 100%;
   }
   .player-mini .mini-content .info {
-    overflow: hidden;    
-    position: relative;    
+    overflow: hidden;
+    position: relative;
+    width: 7rem;
+    float: left;
     padding-top: 0.2rem;
     padding-left: .3rem;
   }
@@ -74,7 +130,7 @@
     overflow: hidden;
     display: block;
     white-space: nowrap;
-    text-overflow: ellipsis;   
+    text-overflow: ellipsis;
   }
   .player-mini .mini-content .info .artist {
     color: #8a8a8a;
@@ -85,12 +141,14 @@
     display: block;
     white-space: nowrap;
     text-overflow: ellipsis;
-    
   }
   .player-mini .mini-content .info .xmpartist {
-    
+
   }
   /*按钮*/
+  .control {
+    float: right;
+  }
   .control .mini-btn {
     width: 2rem;
     height: 2rem;
@@ -103,13 +161,17 @@
     right: 0;
   }
 
-  /*列表按钮*/ 
+  /*列表按钮*/
   .player-list {
     background: url("../../static/playbar_btn_playlist.png") no-repeat!important;
     background-size: cover!important;
   }
   .player {
     background: url("../../static/playbar_btn_play.png") no-repeat!important;
+    background-size: cover!important;
+  }
+  .pause {
+    background: url("../../static/playbar_btn_pause.png") no-repeat!important;
     background-size: cover!important;
   }
   .next {

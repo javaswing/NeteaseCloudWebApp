@@ -1,24 +1,24 @@
 <template>
     <div class="content">
-      <div class="player">
+      <div class="player-wrapper">
         <div class="player-inner">
           <mu-appbar>
-            <mu-icon-button icon='arrow_back'  slot="left"/>
+            <mu-icon-button icon='arrow_back' @click="back"  slot="left"/>
             <div class="play-title">
-              <div class="play-name"><span>标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</span></div>
-              <div class="play-singer"> 演唱者 </div>
+              <div class="play-name"><span>{{audio.name}}</span></div>
+              <div class="play-singer"> {{audio.singer}} </div>
             </div>
             <mu-icon-button icon='share' slot="right"/>
           </mu-appbar>
           <div class="bar-line"></div>
           <mu-flexbox orient="vertical" class="main">
             <mu-flexbox-item order="0">
-              <div class="cd-holder" :class="{'cd-play': play}">
+              <div class="cd-holder" :class="{'cd-play': playing}">
                 <div class="stick"></div>
-                <div class="cd-wrapper" :class="{'cd-rotate': play}">
+                <div class="cd-wrapper" :class="{'cd-rotate': playing}">
                   <div class="cd-mask">
                   </div>
-                  <img src="http://p3.music.126.net/UL_YbIkPg9t6UFpmTRxMPw==/18198016951571087.jpg?param=800y800"/>
+                  <img class="cd-img" :src="audio.albumPic"/>
                 </div>
               </div>
             </mu-flexbox-item>
@@ -32,18 +32,18 @@
               <div class="process-bar">
                 <div class="pro">
                 <div class="pro-wrap">
-                  <mu-slider class="song-slider"/>
+                  <mu-slider class="song-slider" v-model="prCurrentTime"/>
                 </div>
                 <div class="time">
-                  <time id="cur">00:00</time>
-                  <time id="total">04:33</time>
+                  <time id="cur">{{currentTime | time}}</time>
+                  <time id="total">{{durationTime | time}}</time>
                 </div>
               </div>
               </div>
               <div class="control-bar ">
                 <mu-icon-button class="btn d-mode"/>
                 <mu-icon-button class="btn d-prev"/>
-                <mu-icon-button class="btn d-play btn-big" @click="togglePlay" :class="{'d-pause': play}"/>
+                <mu-icon-button class="btn d-play btn-big" @click="togglePlay" :class="{'d-pause': playing}"/>
                 <mu-icon-button class="btn d-next"/>
                 <mu-icon-button class="btn d-list"/>
               </div>
@@ -52,11 +52,60 @@
         </div>
         </div>
       <div class="mask">
-        <div class="album-cover" style="background-image: url('http://p3.music.126.net/UL_YbIkPg9t6UFpmTRxMPw==/18198016951571087.jpg');"></div>
+        <div class="album-cover" :style="{'background-image':'url(' + audio.albumPic + ')'}"></div>
         <div class="cover-mask" style="opacity:0.6;"></div>
       </div>
     </div>
 </template>
+<script>
+import { mapGetters } from 'vuex'
+export default {
+  data () {
+    return {
+    }
+  },
+  methods: {
+    togglePlay () {
+      if (this.playing) {
+        this.$store.commit('pause')
+        document.getElementById('audioPlay').pause()
+      } else {
+        this.$store.commit('play')
+        document.getElementById('audioPlay').play()
+      }
+    },
+    back () {
+      this.$router.go(-1)
+      this.$store.commit('toggleDetail')
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'audio',
+      'playing',
+      'prCurrentTime',
+      'currentTime',
+      'bufferedTime',
+      'durationTime'
+    ])
+  },
+  filters: {
+    // 时间字符格式化
+    time (value) {
+      var length = Math.floor(parseInt(value))
+      var minute = Math.floor(value / 60)
+      if (minute < 10) {
+        minute = '0' + minute
+      }
+      var second = length % 60
+      if (second < 10) {
+        second = '0' + second
+      }
+      return minute + ':' + second
+    }
+  }
+}
+</script>
 <style lang="less" scoped>
   .content {
     overflow: hidden;
@@ -71,7 +120,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  .player {
+  .player-wrapper {
     .player-inner {
       position: relative;
       z-index: 2;
@@ -116,7 +165,7 @@
         position: relative;
         max-width: 65%;
         min-height: 80px;
-        padding: .7rem 1rem;
+        padding: .8rem .9rem;
         border-radius: 50%;
         background: rgba(107, 107, 107, 0.3);
         margin: 3rem auto 0;
@@ -151,6 +200,10 @@
     .cd-rotate {
       -webkit-animation: rotating 10s  linear .3s infinite;
       animation: rotating 10s linear .3s infinite;
+    }
+
+    .cd-img {
+      border-radius: 50%;
     }
 
     // 修改默认的bar样式
@@ -338,17 +391,3 @@
     100% { transform: rotate(360deg);}
   }
 </style>
-<script>
-  export default {
-    data () {
-      return {
-        play: false
-      }
-    },
-    methods: {
-      togglePlay () {
-        this.play = !this.play
-      }
-    }
-  }
-</script>
