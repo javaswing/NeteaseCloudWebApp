@@ -11,10 +11,10 @@ const store = new Vuex.Store({
       'name': '歌曲名称',
       'singer': '演唱者',
       'albumPic': '/static/player-bar.png',
-      'lyric': '',
       'location': '',
       'album': ''
     },
+    lyric: '正在加载中。。',
     currentIndex: 0, // 当前播放的歌曲位置
     playing: false, // 是否正在播放
     loading: false, // 是否正在加载中
@@ -33,6 +33,7 @@ const store = new Vuex.Store({
     showDetail: state => state.showDetail,
     durationTime: state => state.durationTime,
     currentIndex: state => state.currentIndex,
+    bufferedTime: state => state.bufferedTime,
     tmpCurrentTime: state => state.tmpCurrentTime,
     songList: state => state.songList,
     change: state => state.change,
@@ -83,10 +84,6 @@ const store = new Vuex.Store({
     },
     resetAudio (state) {
       state.currentTime = 0
-      state.bufferedTime = 0
-      state.durationTime = 0
-      state.prCurrentTime = 0
-      state.prBufferedTime = 0
     },
     playNext (state) { // 播放下一曲
       state.currentIndex++
@@ -114,6 +111,9 @@ const store = new Vuex.Store({
         state.songList.push(item)
         state.currentIndex = state.songList.length
       }
+    },
+    setLrc (state, lrc) {
+      state.lyric = lrc
     }
   },
   // 异步的数据操作
@@ -121,6 +121,7 @@ const store = new Vuex.Store({
     getSong ({commit, state}, id) {
       commit('openLoading')
       Axios.get(api.getSong(id)).then(res => {
+        // 统一数据模型，方便后台接口的改变
         var id = res.data.songs[0].id
         var name = res.data.songs[0].name
         var singer = res.data.songs[0].artists[0].name
@@ -130,6 +131,19 @@ const store = new Vuex.Store({
         var audio = {id, name, singer, albumPic, location, album}
         commit('addToList', audio)
         commit('setAudio')
+      })
+    },
+    getLrc ({commit, state}, id) {
+      commit('setLrc', '[txt](加载中。。。')
+      console.log('getlrc')
+      Axios.get(api.getLrc(id)).then(res => {
+        // 1、先判断是否有歌词
+        if (res.data.nolyric) {
+          commit('setLrc', '[txt](⊙０⊙) 暂无歌词')
+        } else {
+          console.log(res.data.lrc.lyric)
+          commit('setLrc', res.data.lrc.lyric)
+        }
       })
     }
   }

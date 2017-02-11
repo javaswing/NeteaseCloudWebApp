@@ -12,18 +12,18 @@
             <div class="info-wrapper">
                 <div class="info-gallery">
                     <span>{{playCount | formatCount}}</span>
-                    <img :src="coverImgUrl" alt="">
+                    <img :src="coverImgUrl + '?param=300y300'" alt="">
                 </div>
                 <div class="info-title">
                     <p class="titile">{{name}}</p>
                     <p class="author">
-                        <mu-avatar slot="left"  :src="creator.avatarUrl" :size="30" :iconSize="20"/>
+                        <mu-avatar slot="left"  :src="creator.avatarUrl + '?param=50y50'" :size="30" :iconSize="20"/>
                         <span>{{creator.nickname}}</span>
                     </p>
                 </div>
             </div>
             <div class="bg-mask"></div>
-            <div class="bg-player" id="backImg" :style="{'background-image':'url(' + coverImgUrl + ')'}" ></div>
+            <div class="bg-player" id="backImg" :style="{'background-image':'url(' + coverImgUrl + '?param=300y300)'}" ></div>
         </div>
         <div class="playlist-holder">
             <div class="add-all">
@@ -34,7 +34,7 @@
               <mu-circular-progress :size="40" class="center" v-if="isloading"/>
                 <mu-list :value="value" v-show="!isloading" @change="change">
                 <div v-for="(item, index) in list" @click="playAudio(item.id)">
-                    <mu-list-item  :disableRipple="true" :title="item.name" :describeText="item.artists[0].name">
+                    <mu-list-item  :disableRipple="true" :title="item.name" :value="item.id" :describeText="item.ar[0].name">
                         <span slot="left" class="indexStyle">{{index + 1}}</span>
                     </mu-list-item>
                     <mu-divider inset/>
@@ -46,6 +46,88 @@
         </div>
     </div>
 </template>
+<script>
+import api from '../api'
+export default {
+  data () {
+    return {
+      coverImgUrl: '../../static/default_cover.png',
+      name: '歌单标题',
+      fname: '歌单',
+      playCount: 0,
+      description: '描述描述',
+      creator: {
+        'avatarUrl': '../../static/user-default.png',
+        'nickname': '昵称'
+      },
+      list: [],
+      opacity: 0,
+      value: 0,
+      isloading: false
+    }
+  },
+  // 解除keep-alive的缓存
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      vm.get()
+      // 判断过来的路由是否带有对应的参数信息
+      if (to.params.coverImg) {
+         // 获取songList传入的数据
+        vm.coverImgUrl = vm.$route.params.coverImg
+        vm.name = vm.$route.params.name
+        vm.description = vm.$route.params.desc
+        vm.playCount = vm.$route.params.count
+        vm.creator = vm.$route.params.creator
+      }
+      window.onscroll = () => {
+        var opa = window.pageYOffset / 150
+        if (opa > 0.5) {
+          vm.fname = vm.name
+        } else {
+          vm.fname = '歌单'
+        }
+        vm.opacity = window.pageYOffset / 150
+      }
+    })
+  },
+  // 路由离开时清除onscroll事件
+  beforeRouteLeave: (to, from, next) => {
+    window.onscroll = null
+    next()
+  },
+  methods: {
+    back () {
+      this.$router.go(-1)
+    },
+    get () {
+      this.isloading = true
+      this.$http.get(api.getPlayListDetail(this.$route.params.id)).then((res) => {
+        this.list = res.data.playlist.tracks
+        this.isloading = false
+      })
+    },
+    change (val) {
+      this.value = val
+    },
+    playAudio (id) {
+      // 暂时歌曲，并重置进度条(进度条重置没有实现:TODO)
+      this.$store.commit('resetAudio')
+      document.getElementById('audioPlay').pause()
+      this.$store.commit('pause')
+      this.$store.dispatch('getSong', id)
+    }
+  },
+  filters: {
+    formatCount (v) {
+      if (v < 9999) {
+        return v
+      } else {
+        return (v / 10000).toFixed(0) + '万'
+      }
+    }
+  }
+}
+</script>
 <style lang="less" scoped>
     .fixed-title {
         position: fixed;
@@ -179,81 +261,3 @@
       margin: 10% auto 0;
     }
 </style>
-<script>
-import api from '../api'
-export default {
-  data () {
-    return {
-      coverImgUrl: '../../static/default_cover.png',
-      name: '歌单标题',
-      fname: '歌单',
-      playCount: 0,
-      description: '描述描述',
-      creator: {
-        'avatarUrl': '../../static/user-default.png',
-        'nickname': '昵称'
-      },
-      list: [],
-      opacity: 0,
-      value: 0,
-      isloading: false
-    }
-  },
-  // 解除keep-alive的缓存
-  beforeRouteEnter: (to, from, next) => {
-    next(vm => {
-      vm.get()
-      window.onscroll = () => {
-        var opa = window.pageYOffset / 150
-        if (opa > 0.5) {
-          vm.fname = vm.name
-        } else {
-          vm.fname = '歌单'
-        }
-        vm.opacity = window.pageYOffset / 150
-      }
-    })
-  },
-  // 路由离开时清除onscroll事件
-  beforeRouteLeave: (to, from, next) => {
-    window.onscroll = null
-    next()
-  },
-  methods: {
-    back () {
-      this.$router.go(-1)
-    },
-    get () {
-      this.isloading = true
-      this.$http.get(api.getPlayListDetail(this.$route.params.id)).then((res) => {
-        this.list = res.data.result.tracks
-        this.playCount = res.data.result.playCount
-        this.name = res.data.result.name
-        this.description = res.data.result.description
-        this.coverImgUrl = res.data.result.coverImgUrl
-        this.creator = res.data.result.creator
-        this.isloading = false
-      })
-    },
-    change (val) {
-      this.value = val
-    },
-    playAudio (id) {
-      // 暂时歌曲，并重置进度条
-      document.getElementById('audioPlay').pause()
-      this.$store.commit('pause')
-      this.$store.commit('resetAudio')
-      this.$store.dispatch('getSong', id)
-    }
-  },
-  filters: {
-    formatCount (v) {
-      if (v < 9999) {
-        return v
-      } else {
-        return (v / 10000).toFixed(0) + '万'
-      }
-    }
-  }
-}
-</script>

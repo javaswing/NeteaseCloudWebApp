@@ -24,9 +24,8 @@
             </mu-flexbox-item>
             <mu-flexbox-item order="2" class="bottom-wrapper">
               <div class="lyric-holder">
-                <div class="lrc-inner">
-                  <p>歌词歌词歌词歌词歌词歌词歌词歌词歌词歌词</p>
-                  <p class="on">歌词歌词歌词歌词歌词歌词</p>
+                <div class="lrc-inner" style="transition: -webkit-transform 0.3s ease-out; transform-origin: 0px 0px 0px;" :style="{'transform':' translate3d(0px,'+ lrcOffset +'px, 0px)'}">
+                  <p v-for="(item, index) in afterLrc" :id="'line-'+index" :key="index">{{item.txt}}</p>
                 </div>
               </div>
               <div class="process-bar">
@@ -59,10 +58,20 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import api from '../api'
 export default {
   data () {
     return {
+      lyric: '',
+      afterLrc: [],
+      lrcIndex: 0
     }
+  },
+  beforeRouteEnter: (to, from, next) => {
+    // 这里判断是否重复打开的同一个歌曲页面
+    next(vm => {
+      vm.loadLrc(vm.audio.id)
+    })
   },
   methods: {
     togglePlay () {
@@ -77,17 +86,76 @@ export default {
     back () {
       this.$router.go(-1)
       this.$store.commit('toggleDetail')
+    },
+    loadLrc (id) {
+      this.afterLrc = [{'txt': '正在加载中...'}]
+      if (!id) {
+        this.afterLrc = [{'txt': '这里显示歌词哦！'}]
+        return
+      }
+      this.$http.get(api.getLrc(id)).then((res) => {
+        // 1、先判断是否有歌词
+        if (res.data.nolyric) {
+          this.afterLrc = [{'txt': '(⊙０⊙) 暂无歌词'}]
+        } else {
+          this.lyric = res.data.lrc.lyric
+          this.getLrc()
+        }
+      }, (res) => {
+        console.log('lrc fail')
+      })
+    },
+    getLrc () {
+      if (this.lyric) {
+        var lyrics = this.lyric.split('\n')
+        var lrcObj = []
+        /*eslint-disable */
+        var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g
+        /*eslint-enable */
+        // 思路：1、把歌词进行处理以时间和歌词组成一个对象，放入afterLrc数组中
+        // 2、在computed方法中根据当前的时间进行匹配歌词，然后查找在数据中的位置计算offset值
+        for (var i = 0; i < lyrics.length; i++) {
+          var timeRegExpArr = lyrics[i].match(timeReg)
+          if (!timeRegExpArr) continue
+          var txt = lyrics[i].replace(timeReg, '')
+          // 处理时间
+          for (var k = 0; k < timeRegExpArr.length; k++) {
+            var array = {}
+            var t = timeRegExpArr[k]
+            /*eslint-disable */
+            var min = Number(String(t.match(/\[\d*/i)).slice(1))
+            var sec = Number(String(t.match(/\:\d*/i)).slice(1))
+            /*eslint-enable */
+            var time = min * 60 + sec
+            array.time = time
+            array.txt = txt
+            lrcObj.push(array)
+          }
+        }
+        this.afterLrc = lrcObj
+      }
     }
   },
   computed: {
     ...mapGetters([
-      'audio',
-      'playing',
-      'prCurrentTime',
       'currentTime',
       'bufferedTime',
-      'durationTime'
-    ])
+      'durationTime',
+      'prCurrentTime',
+      'audio',
+      'playing'
+    ]),
+    lrcOffset () {
+      if (this.afterLrc) {
+        // 1、根据时间获得歌词
+        var current = Math.round(this.currentTime)
+        // 2、根据时间得到歌词
+        for (var i = 0; i < this.afterLrc.length; i++) {
+          if (this.afterLrc[i].time === current) this.lrcIndex = i
+        }
+        return -(this.lrcIndex) * 58
+      }
+    }
   },
   filters: {
     // 时间字符格式化
@@ -109,6 +177,7 @@ export default {
 <style lang="less" scoped>
   .content {
     overflow: hidden;
+    min-height: 25rem;
     height: 100%;
   }
   .main {
@@ -229,16 +298,17 @@ export default {
   }
 
 .bottom-wrapper {
-  padding: 1rem 1rem 0;
+  padding: 0 1rem 0;
   color: #fff;
   align-items: flex-end;
 }
 
   // 歌词
   .lyric-holder {
+    margin-top: .6rem;
     position: relative;
     overflow: hidden;
-    height: 3.4rem;
+    height: 3rem;
     .lrc-inner {
       position: absolute;
       left: 10px;
@@ -246,10 +316,11 @@ export default {
       overflow: hidden;
       p {
         overflow: hidden;
+        height: 42px;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: 15px;
-        color: #a3a3a2;
+        font-size: 16px;
+        color: #fff;
         text-align: center;
       }
       .on {

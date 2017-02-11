@@ -12,7 +12,8 @@
   export default {
     data () {
       return {
-        transitionName: 'slide-left'
+        transitionName: 'slide-left',
+        toast: false
       }
     },
     components: {

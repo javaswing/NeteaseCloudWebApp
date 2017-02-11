@@ -2,10 +2,10 @@
   <div class="foot">
     <div class="player-mini">
       <div class="mini-content">
-       <audio :src="audio.location" @timeupdate="updateTime" @canplay="canPlaySong" @ended="playNext" autoplay id="audioPlay"/>
+       <audio :src="audio.location" @timeupdate="updateTime" @canplay="canPlaySong" @error="loadError" @ended="next" id="audioPlay"/>
         <div class="cover" @click="showDetail">
           <mu-circular-progress v-show="loading" :size="30"/>
-          <img class="xmplogo" :src="audio.albumPic" v-show="!loading" :alt="audio.name">
+          <img class="xmplogo" :src="audio.albumPic + '?param=100y100'" v-show="!loading" :alt="audio.name">
         </div>
         <div class="info">
           <div class="name xmpname">{{audio.name}}</div>
@@ -14,27 +14,32 @@
         <div class="control">
           <mu-icon-button class="mini-btn player-list"/>
           <mu-icon-button class="mini-btn player" :class="{pause: playing}" @click="toggleStatus"/>
-          <mu-icon-button class="mini-btn next" @click="playNext"/>
+          <mu-icon-button class="mini-btn next" @click="next"/>
         </div>
         <div class="pro">
           <div class="pro-load proload" :style="{'-webkit-transform':'translateX(' + prBufferedTime +'%)' }"></div>
           <div class="pro-play proplay" :style="{'-webkit-transform':'translateX(' + prCurrentTime +'%)' }"></div> </div>
       </div>
     </div>
+    <toast ref="toast"></toast>
   </div>
 </template>
 <script>
 import { mapMutations, mapGetters } from 'vuex'
+import Toast from '../components/toast'
 export default {
   data () {
     return {
-      loadedTime: 29,
-      playerTime: 10
+      loadedTime: 0,
+      playerTime: 0
     }
+  },
+  components: {
+    Toast
   },
   methods: {
     showDetail () {
-      this.$router.push({ path: '/playerDetail/2' })
+      this.$router.push({name: 'playerDetail', params: {id: this.audio.id}})
       this.$store.commit('toggleDetail')
     },
     ...mapMutations([
@@ -45,6 +50,7 @@ export default {
     canPlaySong () {
       this.$store.commit('closeLoading')
       this.$store.commit('play')
+      document.getElementById('audioPlay').play()
     },
     toggleStatus () {
       if (this.playing) {
@@ -55,18 +61,39 @@ export default {
         this.$store.commit('play')
       }
     },
+    // 文件加载出错
+    loadError () {
+      // 判断是第一次打开程序还是后来程序加载的路径有错根据src是否为空
+      if (document.getElementById('audioPlay').currentSrc) {
+        this.$refs.toast.show('歌曲路径加载出错')
+        this.loading = false
+        this.$store.commit('closeLoading')
+        // 还要把playbar重置下 TODO
+      } else {
+        console.log('程序第一次加载')
+      }
+    },
+    next () {
+      this.toggleStatus()
+      this.$store.commit('playNext')
+    },
     // 更新进度条事件
     updateTime () {
       var vm = this
-      var time = parseInt(document.getElementById('audioPlay').currentTime)
+      var myaudio = document.getElementById('audioPlay')
+      var time = parseInt(myaudio.currentTime)
       // 防止在未加载完成时，切歌出现的错误
       // Failed to execute 'end' on 'TimeRanges':
-      document.getElementById('audioPlay').onprogress = function () {
-        vm.$store.commit('updateBufferedTime', parseInt(document.getElementById('audioPlay').buffered.end(0)))
+      // 由onprogress 更改为 onsuspend事件。参考：http://www.cnblogs.com/tianma3798/p/6038908.html
+      myaudio.onsuspend = function () {
+        var timeRange = myaudio.buffered
+        if (timeRange.length > 0 && myaudio.duration > 0) {
+          vm.$store.commit('updateBufferedTime', parseInt(myaudio.buffered.end(0)))
+        }
       }
-      this.$store.commit('updateDurationTime', parseInt(document.getElementById('audioPlay').duration))
+      vm.$store.commit('updateDurationTime', parseInt(myaudio.duration))
       if (this.change) {
-        document.getElementById('audioPlay').currentTime = this.tmpCurrentTime
+        myaudio.currentTime = this.tmpCurrentTime
         this.$store.commit('setChange', false)
       } else {
         this.$store.commit('updateCurrentTime', time)

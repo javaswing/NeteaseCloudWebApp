@@ -29,6 +29,7 @@ const router = new VueRouter({
       }
     ]
   }, {
+    name: 'playerDetail',
     path: '/playerDetail/:id',
     component: require('../views/playerDetail')
   }, {
