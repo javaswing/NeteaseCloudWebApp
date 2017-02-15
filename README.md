@@ -4,6 +4,8 @@
 
 [在线地址](http://musicapi.duapp.com/index.html)
 
+![code](https://github.com/javaSwing/NeteaseCloudWebApp/raw/master/screenshots/code.png)
+
 ### 技术栈
 - 传说中的VUE全家桶(vue vue-router vuex)
 - axios
@@ -41,4 +43,5 @@ npm test
 
 - [ ]  实现音乐播放器的播放模式
 - [ ]  实现音乐列表的显示
+- [ ]  搜索模块
 
