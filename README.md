@@ -4,8 +4,6 @@
 
 [在线地址](http://musicapi.duapp.com/index.html)
 
-![code](https://github.com/javaSwing/NeteaseCloudWebApp/raw/master/screenshots/code.png)
-
 ### 技术栈
 - 传说中的VUE全家桶(vue vue-router vuex)
 - axios
