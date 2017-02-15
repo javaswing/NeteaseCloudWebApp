@@ -9,7 +9,7 @@ export default {
     return _baseUrl2 + '?type=lyric&id=' + id
   },
   getSong (id) {
-    return _baseUrl + '/detail?ids=' + id
+    return _baseUrl2 + '?id=' + id
   },
   getPlayListDetail (id) {
     return _baseUrl2 + '?type=playlist&id=' + id

@@ -31,7 +31,7 @@
               <div class="process-bar">
                 <div class="pro">
                 <div class="pro-wrap">
-                  <mu-slider class="song-slider" v-model="prCurrentTime"/>
+                  <mu-slider class="song-slider" @change="changeTime" v-model="prCurrentTime"/>
                 </div>
                 <div class="time">
                   <time id="cur">{{currentTime | time}}</time>
@@ -41,9 +41,9 @@
               </div>
               <div class="control-bar ">
                 <mu-icon-button class="btn d-mode"/>
-                <mu-icon-button class="btn d-prev"/>
+                <mu-icon-button class="btn d-prev" @click="playPrev"/>
                 <mu-icon-button class="btn d-play btn-big" @click="togglePlay" :class="{'d-pause': playing}"/>
-                <mu-icon-button class="btn d-next"/>
+                <mu-icon-button class="btn d-next" @click="playNext"/>
                 <mu-icon-button class="btn d-list"/>
               </div>
             </mu-flexbox-item>
@@ -57,7 +57,7 @@
     </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import api from '../api'
 export default {
   data () {
@@ -73,6 +73,11 @@ export default {
       vm.loadLrc(vm.audio.id)
     })
   },
+  watch: {
+    audio (val) {
+      this.loadLrc(val.id)
+    }
+  },
   methods: {
     togglePlay () {
       if (this.playing) {
@@ -86,6 +91,11 @@ export default {
     back () {
       this.$router.go(-1)
       this.$store.commit('toggleDetail')
+    },
+    changeTime (value) { // 改变播放时间事件
+      var time = (value * this.durationTime) / 100
+      this.$store.commit('changeTime', time)
+      this.$store.commit('setChange', true)
     },
     loadLrc (id) {
       this.afterLrc = [{'txt': '正在加载中...'}]
@@ -134,7 +144,11 @@ export default {
         }
         this.afterLrc = lrcObj
       }
-    }
+    },
+    ...mapMutations([
+      'playNext',
+      'playPrev'
+    ])
   },
   computed: {
     ...mapGetters([

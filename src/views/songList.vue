@@ -69,6 +69,7 @@ export default {
 }
 .wrapper {
     width: 100%;
+    padding:0 10px;
     height: 28rem;
     overflow: auto;
     -webkit-overflow-scrolling: touch;

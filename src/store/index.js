@@ -122,20 +122,13 @@ const store = new Vuex.Store({
       commit('openLoading')
       Axios.get(api.getSong(id)).then(res => {
         // 统一数据模型，方便后台接口的改变
-        var id = res.data.songs[0].id
-        var name = res.data.songs[0].name
-        var singer = res.data.songs[0].artists[0].name
-        var albumPic = res.data.songs[0].album.picUrl
-        var location = res.data.songs[0].mp3Url
-        var album = res.data.songs[0].album
-        var audio = {id, name, singer, albumPic, location, album}
-        commit('addToList', audio)
+        var url = res.data.data[0].url
         commit('setAudio')
+        commit('setLocation', url)
       })
     },
     getLrc ({commit, state}, id) {
       commit('setLrc', '[txt](加载中。。。')
-      console.log('getlrc')
       Axios.get(api.getLrc(id)).then(res => {
         // 1、先判断是否有歌词
         if (res.data.nolyric) {

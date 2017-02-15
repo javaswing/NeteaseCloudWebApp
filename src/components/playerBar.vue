@@ -103,9 +103,12 @@ export default {
   computed: {
     ...mapGetters([
       'audio',
+      'change',
       'playing',
       'loading',
+      'currentTime',
       'prBufferedTime',
+      'tmpCurrentTime',
       'prCurrentTime'
     ])
   }

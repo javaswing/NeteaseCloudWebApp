@@ -1,8 +1,21 @@
 # netease-clound-webapps
 
-> A Vue.js project
+> 这是一个用VUEJS写高仿网易云音乐的webapp，只实现了APP的核心功能，这个项目会长期进行更新。
 
-## Build Setup
+[在线地址](http://vuetest-001-site1.btempurl.com/)
+
+### 技术栈
+- 传说中的VUE全家桶(vue vue-router vuex)
+- axios
+- Muse-UI(一个基于Vue2.x的material design 风格UI框架)
+
+## 运行截图
+![首页](https://github.com/javaSwing/NeteaseCloudWebApp/raw/master/screenshots/1.png)
+![详情](https://github.com/javaSwing/NeteaseCloudWebApp/raw/master/screenshots/2.png)
+![动图](https://github.com/javaSwing/NeteaseCloudWebApp/raw/master/screenshots/3.gif)
+![动图](https://github.com/javaSwing/NeteaseCloudWebApp/raw/master/screenshots/4.png)
+
+## 安装运行（Build Setup）
 
 ``` bash
 # install dependencies
@@ -24,4 +37,8 @@ npm run e2e
 npm test
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## TODO
+
+- [ ]  实现音乐播放器的播放模式
+- [ ]  实现音乐列表的显示
+

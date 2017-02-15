@@ -33,7 +33,7 @@
             <div>
               <mu-circular-progress :size="40" class="center" v-if="isloading"/>
                 <mu-list :value="value" v-show="!isloading" @change="change">
-                <div v-for="(item, index) in list" @click="playAudio(item.id)">
+                <div v-for="(item, index) in list" @click="playAudio(item)">
                     <mu-list-item  :disableRipple="true" :title="item.name" :value="item.id" :describeText="item.ar[0].name">
                         <span slot="left" class="indexStyle">{{index + 1}}</span>
                     </mu-list-item>
@@ -109,12 +109,17 @@ export default {
     change (val) {
       this.value = val
     },
-    playAudio (id) {
-      // 暂时歌曲，并重置进度条(进度条重置没有实现:TODO)
-      this.$store.commit('resetAudio')
+    playAudio (song) {
       document.getElementById('audioPlay').pause()
       this.$store.commit('pause')
-      this.$store.dispatch('getSong', id)
+      var audio = {}
+      audio.id = song.id  // id
+      audio.singer = song.ar[0].name // 演唱者
+      audio.albumPic = song.al.picUrl
+      audio.name = song.name
+      // 通过Vuex改变状态
+      this.$store.commit('addToList', audio)
+      this.$store.dispatch('getSong', audio.id)
     }
   },
   filters: {
