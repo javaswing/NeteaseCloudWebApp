@@ -12,7 +12,7 @@
           <div class="artist xmpartist">{{audio.singer}}</div>
         </div>
         <div class="control">
-          <mu-icon-button class="mini-btn player-list"/>
+          <mu-icon-button class="mini-btn player-list" @click="showList"/>
           <mu-icon-button class="mini-btn player" :class="{pause: playing}" @click="toggleStatus"/>
           <mu-icon-button class="mini-btn next" @click="next"/>
         </div>
@@ -22,11 +22,13 @@
       </div>
     </div>
     <toast ref="toast"></toast>
+    <BottomSheet ref="bottomSheet"></BottomSheet>
   </div>
 </template>
 <script>
 import { mapMutations, mapGetters } from 'vuex'
 import Toast from '../components/toast'
+import BottomSheet from '../components/list'
 export default {
   data () {
     return {
@@ -35,12 +37,16 @@ export default {
     }
   },
   components: {
-    Toast
+    Toast,
+    BottomSheet
   },
   methods: {
     showDetail () {
       this.$router.push({name: 'playerDetail', params: {id: this.audio.id}})
       this.$store.commit('toggleDetail')
+    },
+    showList () {
+      this.$refs.bottomSheet.show()
     },
     ...mapMutations([
       'play',

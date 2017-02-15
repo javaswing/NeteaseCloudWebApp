@@ -58,6 +58,26 @@ const store = new Vuex.Store({
     setAudio (state) {
       state.audio = state.songList[state.currentIndex - 1]
     },
+    setAudioIndex (state, index) {
+      state.audio = state.songList[index]
+      state.currentIndex = index + 1
+    },
+    removeAudio (state, index) {
+      state.songList.splice(index, 1)
+      state.audio = state.songList[index - 1]
+      state.currentIndex = state.currentIndex - 1
+      if (state.songList.length === 0) {
+        state.audio = {
+          'id': 0,
+          'name': '歌曲名称',
+          'singer': '演唱者',
+          'albumPic': '/static/player-bar.png',
+          'location': '',
+          'album': ''
+        }
+        state.playing = false
+      }
+    },
     setChange (state, flag) {
       state.change = flag
     },

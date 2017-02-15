@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-bottom:2.3rem;">
+    <div class="playList" style="margin-bottom:2.3rem;width:100%;">
         <div class="fixed-title" :style="{'background': 'rgba(206, 61, 62, '+ opacity +')'}">
             <mu-appbar>
             <mu-icon-button icon='arrow_back' @click="back" slot="left"/>

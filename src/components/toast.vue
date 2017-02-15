@@ -30,26 +30,26 @@ export default {
 }
 </script>
 
-<style>
-    .toast-wrap {
-        position: fixed;
-        bottom: 80px;
-        left: 0;
-        right: 0;
-        width: 50%;
-        margin-left: auto;
-        margin-right: auto;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: #ffffff;
-        text-align: center;
-        padding: 5px;
-        font-size: 12px;
-        border-radius: 5px;
-    }
-    .toast-fade-enter-active, .toast-fade-leave-active {
-        transition: opacity .5s;
-    }
-    .toast-fade-enter, .toast-fade-leave-active {
-        opacity: 0
-    }
+<style scoped>
+  .toast-wrap {
+      position: fixed;
+      bottom: 80px;
+      left: 0;
+      right: 0;
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #ffffff;
+      text-align: center;
+      padding: 5px;
+      font-size: 12px;
+      border-radius: 5px;
+  }
+  .toast-fade-enter-active, .toast-fade-leave-active {
+      transition: opacity .5s;
+  }
+  .toast-fade-enter, .toast-fade-leave-active {
+      opacity: 0
+  }
 </style>

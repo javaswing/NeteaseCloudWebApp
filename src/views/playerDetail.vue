@@ -44,7 +44,7 @@
                 <mu-icon-button class="btn d-prev" @click="playPrev"/>
                 <mu-icon-button class="btn d-play btn-big" @click="togglePlay" :class="{'d-pause': playing}"/>
                 <mu-icon-button class="btn d-next" @click="playNext"/>
-                <mu-icon-button class="btn d-list"/>
+                <mu-icon-button class="btn d-list" @click="showList"/>
               </div>
             </mu-flexbox-item>
           </mu-flexbox>
@@ -54,10 +54,14 @@
         <div class="album-cover" :style="{'background-image':'url(' + audio.albumPic + ')'}"></div>
         <div class="cover-mask" style="opacity:0.6;"></div>
       </div>
+      <toast ref="toast"></toast>
+      <BottomSheet ref="bottomSheet"></BottomSheet>
     </div>
 </template>
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import Toast from '../components/toast'
+import BottomSheet from '../components/list'
 import api from '../api'
 export default {
   data () {
@@ -66,6 +70,10 @@ export default {
       afterLrc: [],
       lrcIndex: 0
     }
+  },
+  components: {
+    Toast,
+    BottomSheet
   },
   beforeRouteEnter: (to, from, next) => {
     // 这里判断是否重复打开的同一个歌曲页面
@@ -144,6 +152,9 @@ export default {
         }
         this.afterLrc = lrcObj
       }
+    },
+    showList () {
+      this.$refs.bottomSheet.show()
     },
     ...mapMutations([
       'playNext',

@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper playList">
       <div class="content">
         <div class="title">全部歌单 </div>
             <mu-flexbox wrap="wrap" justify="space-around" class="box" :gutter="0">
