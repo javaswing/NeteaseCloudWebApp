@@ -64,8 +64,11 @@ const store = new Vuex.Store({
     },
     removeAudio (state, index) {
       state.songList.splice(index, 1)
-      state.audio = state.songList[index - 1]
-      state.currentIndex = state.currentIndex - 1
+      if (index === state.songList.length) {
+        index--
+      }
+      state.audio = state.songList[index]
+      state.currentIndex = index + 1
       if (state.songList.length === 0) {
         state.audio = {
           'id': 0,
@@ -145,18 +148,6 @@ const store = new Vuex.Store({
         var url = res.data.data[0].url
         commit('setAudio')
         commit('setLocation', url)
-      })
-    },
-    getLrc ({commit, state}, id) {
-      commit('setLrc', '[txt](加载中。。。')
-      Axios.get(api.getLrc(id)).then(res => {
-        // 1、先判断是否有歌词
-        if (res.data.nolyric) {
-          commit('setLrc', '[txt](⊙０⊙) 暂无歌词')
-        } else {
-          console.log(res.data.lrc.lyric)
-          commit('setLrc', res.data.lrc.lyric)
-        }
       })
     }
   }

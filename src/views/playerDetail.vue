@@ -18,7 +18,7 @@
                 <div class="cd-wrapper" :class="{'cd-rotate': playing}">
                   <div class="cd-mask">
                   </div>
-                  <img class="cd-img" :src="audio.albumPic"/>
+                  <img class="cd-img" :src="audio.albumPic + '?param=500y500'"/>
                 </div>
               </div>
             </mu-flexbox-item>
@@ -51,7 +51,7 @@
         </div>
         </div>
       <div class="mask">
-        <div class="album-cover" :style="{'background-image':'url(' + audio.albumPic + ')'}"></div>
+        <div class="album-cover" :style="{'background-image':'url(' + audio.albumPic + '?param=500y500' + ')'}"></div>
         <div class="cover-mask" style="opacity:0.6;"></div>
       </div>
       <toast ref="toast"></toast>
@@ -106,6 +106,7 @@ export default {
       this.$store.commit('setChange', true)
     },
     loadLrc (id) {
+      var self = this
       this.afterLrc = [{'txt': '正在加载中...'}]
       if (!id) {
         this.afterLrc = [{'txt': '这里显示歌词哦！'}]
@@ -121,6 +122,11 @@ export default {
         }
       }, (res) => {
         console.log('lrc fail')
+         this.afterLrc = [{'txt': '加载歌词失败'}]
+      })
+      .catch(function (error) {
+        console.log(error)
+        self.afterLrc = [{'txt': '(⊙０⊙) 暂无歌词'}]
       })
     },
     getLrc () {

@@ -29,16 +29,21 @@ export default {
   methods: {
     closeBottomSheet () {
       this.bottomSheet = false
-      document.querySelector('.playList').style.position = 'static'
+      if (document.querySelector('.playList')) {
+        document.querySelector('.playList').style.position = 'static'
+      }
     },
     show () {
       this.bottomSheet = true
-      document.querySelector('.playList').style.position = 'fixed'
+      if (document.querySelector('.playList')) {
+        document.querySelector('.playList').style.position = 'fixed'
+      }
     },
     play (index) {
       this.$store.commit('setAudioIndex', index)
     },
     remove (index) {
+      console.log(index)
       this.$store.commit('removeAudio', index)
     }
   },
@@ -97,6 +102,8 @@ html,body { height:100%; overflow:hidden }
   font-size: 12px;
 }
 .list-btn {
+  width: 32px;
+  text-align: center;
   float: right;
   color: #737171;
 }
