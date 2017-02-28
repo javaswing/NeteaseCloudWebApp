@@ -122,7 +122,7 @@ export default {
         }
       }, (res) => {
         console.log('lrc fail')
-         this.afterLrc = [{'txt': '加载歌词失败'}]
+        this.afterLrc = [{'txt': '加载歌词失败'}]
       })
       .catch(function (error) {
         console.log(error)

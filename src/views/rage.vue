@@ -20,7 +20,7 @@
         <mu-flexbox-item basis="28%" class="item" :key="item.id" v-for="item in playList">
           <router-link :to="{name: 'playListDetail',params: { id: item.id, name: item.name, coverImg: item.coverImgUrl, creator: item.creator, count: item.playCount, desc: item.description }}">
           <div class="bar">{{item.playCount | formatCount}}</div>
-          <img class="item-img img-response" v-lazy="item.coverImgUrl + '?param=230y230'" lazy="loading">
+          <img class="item-img img-response" :src="item.coverImgUrl + '?param=230y230'" lazy="loading">
           <div class="item-name">{{item.name}}</div>
           </router-link>
         </mu-flexbox-item>
