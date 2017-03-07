@@ -122,18 +122,21 @@ const store = new Vuex.Store({
       }
       state.audio = state.songList[state.currentIndex - 1]
     },
-    addToList (state, item) {
-      var flag = false
-      state.songList.forEach(function (element, index) { // 检测歌曲重复
-        if (element.id === item.id) {
-          flag = true
-          state.currentIndex = index + 1
+    addToList (state, songs) {
+      var items = Array.prototype.concat.call(songs)
+      items.forEach(item => {
+        var flag = false
+        state.songList.forEach(function (element, index) { // 检测歌曲重复
+          if (element.id === item.id) {
+            flag = true
+            state.currentIndex = index + 1
+          }
+        })
+        if (!flag) {
+          state.songList.push(item)
+          state.currentIndex = state.songList.length
         }
       })
-      if (!flag) {
-        state.songList.push(item)
-        state.currentIndex = state.songList.length
-      }
     },
     setLrc (state, lrc) {
       state.lyric = lrc
