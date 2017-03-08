@@ -78,7 +78,10 @@ export default {
   beforeRouteEnter: (to, from, next) => {
     // 这里判断是否重复打开的同一个歌曲页面
     next(vm => {
-      vm.loadLrc(vm.audio.id)
+      if (parseInt(to.params.id) !== parseInt(vm.audio.id)) {
+        console.log('vm：id' + vm.audio.id)
+        vm.loadLrc(vm.audio.id)
+      }
     })
   },
   watch: {
@@ -492,4 +495,11 @@ export default {
     0% { transform: rotate(0deg);}
     100% { transform: rotate(360deg);}
   }
+
+   .fade-enter-active {
+      transition: all .4s;
+    }
+    .fade-enter {
+      transform: translate(100%, 0);
+    }
 </style>

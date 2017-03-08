@@ -12,7 +12,7 @@
         <mu-tab value="hotSinger" title="热门歌手"/>
       </mu-tabs>
       </div>
-      <div class="view">
+      <div class="default-view" :class="{view: songList.length > 0}">
         <keep-alive>
          <router-view></router-view>
         </keep-alive>
@@ -45,12 +45,15 @@
     left: 0;
     z-index: 15;
   }
-  .view {
+  .default-view {
     margin-top: 104px;
+  }
+  .view {
     margin-bottom: 2.3rem;
   }
 </style>
 <script>
+  import { mapGetters } from 'vuex'
   export default {
     data () {
       return {
@@ -79,6 +82,11 @@
         this.activeTab = val
         this.$router.push({ path: '/index/' + val })
       }
+    },
+    computed: {
+      ...mapGetters([
+        'songList'
+      ])
     }
   }
 </script>

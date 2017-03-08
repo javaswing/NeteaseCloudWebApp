@@ -14,7 +14,7 @@ const store = new Vuex.Store({
       'location': '',
       'album': ''
     },
-    lyric: '正在加载中。。',
+    lyric: '',
     currentIndex: 0, // 当前播放的歌曲位置
     playing: false, // 是否正在播放
     loading: false, // 是否正在加载中
@@ -151,6 +151,10 @@ const store = new Vuex.Store({
         var url = res.data.data[0].url
         commit('setAudio')
         commit('setLocation', url)
+      })
+      .catch((error) => {     // 错误处理
+        console.log(error)
+        window.alert('获取歌曲信息出错！')
       })
     }
   }

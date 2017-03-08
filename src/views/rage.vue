@@ -148,10 +148,10 @@
     top: 0;
     left: 50%;
     background: #fff;
-    width: 3rem;
-    height: 3rem;
+    width: 2.5rem;
+    height: 2.5rem;
     margin-top: 70%;
-    margin-left: -1.5rem;
+    margin-left: -1.25rem;
     background: url('../../static/rage_loading.png') no-repeat;
     background-size: cover;
     -webkit-animation: rotating 5s  linear infinite;
@@ -161,7 +161,7 @@
     position: absolute;
     top:0;
     color: #4a4a4a;
-    margin-top: 90%;
+    margin-top: 87%;
     width: 100%;
     text-align:center;
   }

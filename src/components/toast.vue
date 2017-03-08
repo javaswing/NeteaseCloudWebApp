@@ -3,7 +3,6 @@
         <div class="toast-wrap" v-show="showing">{{text}}</div>
     </transition>
 </template>
-
 <script>
 const DEFAULT_DURATION = 2000
 export default {
@@ -33,7 +32,7 @@ export default {
 <style scoped>
   .toast-wrap {
       position: fixed;
-      bottom: 80px;
+      bottom: 2.4rem;
       left: 0;
       right: 0;
       width: 50%;
@@ -45,6 +44,7 @@ export default {
       padding: 5px;
       font-size: 12px;
       border-radius: 5px;
+      z-index: 10;
   }
   .toast-fade-enter-active, .toast-fade-leave-active {
       transition: opacity .5s;

@@ -1,4 +1,3 @@
-// const _baseUrl = 'http://192.168.0.73:809/api/music'
 const _baseUrl = 'http://musicapi.duapp.com/api.php'
 const _baseUrl2 = 'https://api.imjad.cn/cloudmusic/'
 export default {
