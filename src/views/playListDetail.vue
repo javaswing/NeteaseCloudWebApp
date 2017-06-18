@@ -120,7 +120,6 @@ export default {
     playAudio (song) {
       document.getElementById('audioPlay').pause()
       this.$store.commit('pause')
-      // this.$parent.$refs.alert.show('tess')
       var audio = {}
       audio.id = song.id  // id
       audio.singer = song.ar[0].name // 演唱者
@@ -303,11 +302,10 @@ export default {
       width:100%;
       margin-bottom:2.3rem;
     }
-    // 过渡效果
-    .fade-enter-active, .fade-leave-active {
-      transition: all .4s;
-    }
-    .fade-enter, .fade-leave {
-      transform: translate(100%, 0);
+    .mu-item-title {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      line-height: 1.5;
     }
 </style>

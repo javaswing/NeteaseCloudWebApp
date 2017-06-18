@@ -1,10 +1,9 @@
 <template>
   <div>
       <keep-alive>
-        <router-view></router-view>
+          <router-view></router-view>
       </keep-alive>
     <Player v-show="songList.length > 0 && !showDetail"></Player>
-     <Toast ref="alert"></Toast>
   </div>
 </template>
 <script>
@@ -13,7 +12,6 @@
   export default {
     data () {
       return {
-        toast: false
       }
     },
     components: {

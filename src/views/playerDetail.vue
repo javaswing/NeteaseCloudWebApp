@@ -54,13 +54,11 @@
         <div class="album-cover" :style="{'background-image':'url(' + audio.albumPic + '?param=500y500' + ')'}"></div>
         <div class="cover-mask" style="opacity:0.6;"></div>
       </div>
-      <toast ref="toast"></toast>
       <BottomSheet ref="bottomSheet"></BottomSheet>
     </div>
 </template>
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import Toast from '../components/toast'
 import BottomSheet from '../components/list'
 import api from '../api'
 export default {
@@ -72,7 +70,6 @@ export default {
     }
   },
   components: {
-    Toast,
     BottomSheet
   },
   beforeRouteEnter: (to, from, next) => {

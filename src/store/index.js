@@ -10,7 +10,7 @@ const store = new Vuex.Store({
       'id': 0,
       'name': '歌曲名称',
       'singer': '演唱者',
-      'albumPic': '/static/player-bar.png',
+      'albumPic': '/static/placeholder_disk_play_program.png',
       'location': '',
       'album': ''
     },
@@ -145,6 +145,13 @@ const store = new Vuex.Store({
   // 异步的数据操作
   actions: {
     getSong ({commit, state}, id) {
+      // 使用 CancelToken 退出一个Axios事件
+      var CancelToken = Axios.CancelToken
+      var source = CancelToken.source()
+      if (state.loading && state.songList.length > 0) {
+        console.log('cancel')
+        source.cancel()
+      }
       commit('openLoading')
       Axios.get(api.getSong(id)).then(res => {
         // 统一数据模型，方便后台接口的改变

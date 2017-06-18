@@ -203,6 +203,10 @@ export default {
         this.isloading = false
         this.playList = res.data.playlists
       })
+      // this.$toast('Let me give a toast to you all.', {
+      //   horizontalPosition: 'center',
+      //   verticalPosition: 'bottom'
+      // })
     }
   },
   filters: {

@@ -21,13 +21,11 @@
           <div class="pro-play proplay" :style="{'-webkit-transform':'translateX(' + prCurrentTime +'%)' }"></div> </div>
       </div>
     </div>
-    <toast ref="toast"></toast>
     <BottomSheet ref="bottomSheet"></BottomSheet>
   </div>
 </template>
 <script>
 import { mapMutations, mapGetters } from 'vuex'
-import Toast from '../components/toast'
 import BottomSheet from '../components/list'
 export default {
   data () {
@@ -37,7 +35,6 @@ export default {
     }
   },
   components: {
-    Toast,
     BottomSheet
   },
   methods: {
@@ -71,7 +68,7 @@ export default {
     loadError () {
       // 判断是第一次打开程序还是后来程序加载的路径有错根据src是否为空
       if (document.getElementById('audioPlay').currentSrc) {
-        this.$refs.toast.show('歌曲路径加载出错')
+        // this.$refs.toast.show('歌曲路径加载出错')
         this.loading = false
         this.$store.commit('closeLoading')
         // 还要把playbar重置下 TODO

@@ -19,39 +19,6 @@
       </div>
     </div>
 </template>
-<style lang="less" scoped>
-  @import "../assets/theme.less";
-  .logo {
-    width: 150px;
-    height: 48px;
-    background: url("../../static/logo.png") no-repeat left center;
-    background-size: cover;
-  }
-  .view-tabs {
-    background-color: #fff;
-    color: rgba(0,0,0,.87);
-    >.mu-tab-link {
-      color: rgba(102,102,102,1);
-    }
-    >.mu-tab-active{
-      color: @primaryColor;
-    }
-  }
-
-  .fixed-bar {
-    position: fixed;
-    width: 100%;
-    top:0;
-    left: 0;
-    z-index: 15;
-  }
-  .default-view {
-    margin-top: 104px;
-  }
-  .view {
-    margin-bottom: 2.3rem;
-  }
-</style>
 <script>
   import { mapGetters } from 'vuex'
   export default {
@@ -90,3 +57,36 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  @import "../assets/theme.less";
+  .logo {
+    width: 150px;
+    height: 48px;
+    background: url("../../static/logo.png") no-repeat left center;
+    background-size: cover;
+  }
+  .view-tabs {
+    background-color: #fff;
+    color: rgba(0,0,0,.87);
+    >.mu-tab-link {
+      color: rgba(102,102,102,1);
+    }
+    >.mu-tab-active{
+      color: @primaryColor;
+    }
+  }
+
+  .fixed-bar {
+    position: fixed;
+    width: 100%;
+    top:0;
+    left: 0;
+    z-index: 15;
+  }
+  .default-view {
+    margin-top: 104px;
+  }
+  .view {
+    margin-bottom: 2.3rem;
+  }
+</style>

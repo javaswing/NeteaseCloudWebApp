@@ -1,5 +1,5 @@
 import axios from 'axios'
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 8000
 // code状态码200判断
 axios.interceptors.response.use((res) => {
   if (res.status === 654) { // 百度云请求超时检测
