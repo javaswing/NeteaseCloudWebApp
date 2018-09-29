@@ -51,4 +51,4 @@ npm test
 
 ## License
 
-[MIT](https://github.com/u3u/NeteaseCloudMusicApi/blob/master/LICENSE)
+[MIT](https://github.com/javaSwing/NeteaseCloudWebApp/blob/master/LICENSE)
