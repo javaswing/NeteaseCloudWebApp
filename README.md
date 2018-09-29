@@ -48,3 +48,7 @@ npm test
 
 歌单列表部分为自己提供，在别一个项目中[MusicApi](https://github.com/javaSwing/MusicAPI)
 
+
+## License
+
+[MIT](https://github.com/u3u/NeteaseCloudMusicApi/blob/master/LICENSE)
