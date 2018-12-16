@@ -7,10 +7,7 @@
       <div class="container" v-show="!isloading">
       <div id="slider">
         <swiper :options="swiperOption">
-          <swiper-slide><img src="/static/banner1.jpg" class="banner-item"  alt=""></swiper-slide>
-          <swiper-slide><img src="/static/banner2.jpg" class="banner-item"  alt=""></swiper-slide>
-          <swiper-slide><img src="/static/banner3.jpg" class="banner-item"  alt=""></swiper-slide>
-          <swiper-slide><img src="/static/banner4.jpg" class="banner-item"  alt=""></swiper-slide>
+          <swiper-slide v-for="item in bannerList" :key="item.imageUrl"><img :src="item.imageUrl" class="banner-item"  alt=""></swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
         </swiper>
       </div>
@@ -18,34 +15,19 @@
       <div class="g-title song-list">推荐歌单 <router-link :to="{path: '/index/songList'}">更多></router-link></div>
       <mu-flexbox wrap="wrap" justify="space-around" class="box" :gutter="0">
         <mu-flexbox-item basis="28%" class="item" :key="item.id" v-for="item in playList">
-          <router-link :to="{name: 'playListDetail',params: { id: item.id, name: item.name, coverImg: item.coverImgUrl, creator: item.creator, count: item.playCount, desc: item.description }}">
+          <router-link :to="{name: 'playListDetail',params: { id: item.id, name: item.name, coverImg: item.picUrl, creator: item.copywriter, count: item.playCount, desc: item.description }}">
           <div class="bar">{{item.playCount | formatCount}}</div>
-          <img class="item-img img-response" :src="item.coverImgUrl + '?param=230y230'" lazy="loading">
+          <img class="item-img img-response" :src="item.picUrl" lazy="loading">
           <div class="item-name">{{item.name}}</div>
           </router-link>
         </mu-flexbox-item>
       </mu-flexbox>
         <div class="g-title mv">推荐MV <router-link :to="{}">更多></router-link></div>
-        <mu-flexbox wrap="wrap" justify="space-around" class="box" :gutter="0">
-          <mu-flexbox-item basis="40%" class="mv-item">
-            <img class="img-response" src="http://p4.music.126.net/0r0H97s-bM0lZzs6x0Ibeg==/18685100604133296.jpg?param=300y170">
-            <div class="mv-name">Skin to sking</div>
-            <div class="mv-author">鹿晗</div>
-          </mu-flexbox-item>
-          <mu-flexbox-item basis="40%" class="mv-item">
-            <img class="img-response"  src="http://p4.music.126.net/0r0H97s-bM0lZzs6x0Ibeg==/18685100604133296.jpg?param=300y170">
-            <div class="mv-name">Skin to sking</div>
-            <div class="mv-author">鹿晗</div>
-          </mu-flexbox-item>
-          <mu-flexbox-item basis="40%" class="mv-item">
-            <img class="img-response" src="http://p3.music.126.net/DNlE0AUQdXci4XaQaxsHPQ==/18643319162278619.jpg?param=300y170">
-            <div class="mv-name">Skin to skingSkin to</div>
-            <div class="mv-author">鹿晗</div>
-          </mu-flexbox-item>
-          <mu-flexbox-item basis="40%" class="mv-item">
-            <img class="img-response"  src="http://p3.music.126.net/DNlE0AUQdXci4XaQaxsHPQ==/18643319162278619.jpg?param=300y170">
-            <div class="mv-name">Skin to sking</div>
-            <div class="mv-author">鹿晗</div>
+        <mu-flexbox wrap="wrap" justify="space-between" class="box" :gutter="0">
+          <mu-flexbox-item basis="48%" class="mv-item" v-for="item in mvList" :key="item.artistId">
+            <img class="img-response" :src="item.picUrl">
+            <div class="mv-name">{{item.name}}</div>
+            <div class="mv-author">{{item.artistName}}</div>
           </mu-flexbox-item>
         </mu-flexbox>
       </div>
@@ -165,6 +147,13 @@
     width: 100%;
     text-align:center;
   }
+  .mv-name {
+    width: 100%;
+    height: 21px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
   @keyframes rotating {
       0%{
@@ -176,6 +165,7 @@
   }
 </style>
 <script>
+import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import api from '../api'
 export default {
@@ -186,6 +176,7 @@ export default {
         paginationClickable: true
       },
       isloading: true,
+      bannerList: [],
       playList: [],
       mvList: []
     }
@@ -195,18 +186,23 @@ export default {
     swiperSlide
   },
   created () {
-    this.get()
+    this.loadData()
   },
   methods: {
-    get () {
-      this.$http.get(api.getPlayListByWhere('全部', 'hot', 0, true, 6)).then((res) => {
+    /**
+     * 加载所有数据
+     * @author javaSwing
+     */
+    loadData () {
+      let personSongList = this.$http.get(api.getPersonalized())
+      let bannerList = this.$http.get(api.getBannerList())
+      let personMVList = this.$http.get(api.getPersonalizedMV())
+      Promise.all([personSongList, bannerList, personMVList]).then(data => {
+        this.playList = data[0].result.length > 6 && data[0].result.slice(0, 6)
+        this.bannerList = data[1].banners
+        this.mvList = data[2].result.length > 6 ? data[2].result.slice(0, 6) : data[2].result
         this.isloading = false
-        this.playList = res.data.playlists
       })
-      // this.$toast('Let me give a toast to you all.', {
-      //   horizontalPosition: 'center',
-      //   verticalPosition: 'bottom'
-      // })
     }
   },
   filters: {

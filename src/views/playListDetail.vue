@@ -16,7 +16,7 @@
                 </div>
                 <div class="info-title">
                     <p class="titile">{{name}}</p>
-                    <p class="author">
+                    <p class="author" v-if="creator.avatarUrl">
                         <mu-avatar slot="left"  :src="creator.avatarUrl + '?param=50y50'" :size="30" :iconSize="20"/>
                         <span>{{creator.nickname}}</span>
                     </p>
@@ -33,15 +33,13 @@
             <div>
               <mu-circular-progress :size="40" class="center" v-if="isloading"/>
                 <mu-list :value="value" v-show="!isloading" @change="change">
-                <div v-for="(item, index) in list" @click="playAudio(item)">
-                    <mu-list-item  :disableRipple="true" :title="item.name" :value="item.id" :describeText="item.ar[0].name">
-                        <span slot="left" class="indexStyle">{{index + 1}}</span>
-                    </mu-list-item>
-                    <mu-divider inset/>
-                </div>
+                  <div v-for="(item, index) in list" :key="item.id" @click="playAudio(item)">
+                      <mu-list-item  :disableRipple="true" :title="item.name" :value="item.id" :describeText="item.ar[0].name">
+                          <span slot="left" class="indexStyle">{{index + 1}}</span>
+                      </mu-list-item>
+                      <mu-divider inset></mu-divider>
+                  </div>
                 </mu-list>
-            </div>
-            </mu-list>
             </div>
         </div>
     </div>
@@ -107,8 +105,8 @@ export default {
     },
     get () {
       this.isloading = true
-      this.$http.get(api.getPlayListDetail(this.$route.params.id)).then((res) => {
-        this.list = res.data.playlist.tracks
+      this.$http.get(api.getPlayListDetail(this.$route.params.id)).then(data => {
+        this.list = data.playlist.tracks
         this.isloading = false
       }).catch((error) => {
         console.log('加载歌单信息出错:' + error)

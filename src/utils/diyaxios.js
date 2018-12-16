@@ -1,5 +1,7 @@
 import axios from 'axios'
 axios.defaults.timeout = 8000
+// 添加请求头
+// axios.defaults.headers.xhrFields = { withCredentials: true }
 // code状态码200判断
 axios.interceptors.response.use((res) => {
   if (res.status === 654) { // 百度云请求超时检测
@@ -9,7 +11,7 @@ axios.interceptors.response.use((res) => {
     window.alert('数据返回有误')
     return Promise.reject(res)
   }
-  return res
+  return res.data
 }, (error) => {
   console.log('promise error:' + error)
   return Promise.reject(error)

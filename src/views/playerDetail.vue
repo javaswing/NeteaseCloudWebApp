@@ -75,14 +75,15 @@ export default {
   beforeRouteEnter: (to, from, next) => {
     // 这里判断是否重复打开的同一个歌曲页面
     next(vm => {
-      if (parseInt(to.params.id) !== parseInt(vm.audio.id)) {
-        console.log('vm：id' + vm.audio.id)
+      if (parseInt(to.params.id) !== parseInt(vm.audio.id) || vm.lyric === '') {
         vm.loadLrc(vm.audio.id)
       }
     })
   },
   watch: {
     audio (val) {
+      console.log('watch')
+      console.log(val)
       this.loadLrc(val.id)
     }
   },
@@ -106,18 +107,17 @@ export default {
       this.$store.commit('setChange', true)
     },
     loadLrc (id) {
-      var self = this
       this.afterLrc = [{'txt': '正在加载中...'}]
       if (!id) {
         this.afterLrc = [{'txt': '这里显示歌词哦！'}]
         return
       }
-      this.$http.get(api.getLrc(id)).then((res) => {
+      this.$http.get(api.getLrc(id)).then((data) => {
         // 1、先判断是否有歌词
-        if (res.data.nolyric) {
+        if (!data.lrc.lyric) {
           this.afterLrc = [{'txt': '(⊙０⊙) 暂无歌词'}]
         } else {
-          this.lyric = res.data.lrc.lyric
+          this.lyric = data.lrc.lyric
           this.getLrc()
         }
       }, (res) => {
@@ -126,7 +126,7 @@ export default {
       })
       .catch(function (error) {
         console.log(error)
-        self.afterLrc = [{'txt': '(⊙０⊙) 暂无歌词'}]
+        this.afterLrc = [{'txt': '(⊙０⊙) 暂无歌词'}]
       })
     },
     getLrc () {
@@ -172,10 +172,16 @@ export default {
       'currentTime',
       'bufferedTime',
       'durationTime',
-      'prCurrentTime',
       'audio',
       'playing'
     ]),
+    prCurrentTime: {
+      get: function () {
+        return this.$store.getters.prCurrentTime
+      },
+      set: function (newVal) {
+      }
+    },
     lrcOffset () {
       if (this.afterLrc) {
         // 1、根据时间获得歌词

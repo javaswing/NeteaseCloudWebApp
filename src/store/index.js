@@ -153,9 +153,9 @@ const store = new Vuex.Store({
         source.cancel()
       }
       commit('openLoading')
-      Axios.get(api.getSong(id)).then(res => {
+      Axios.get(api.getSong(id)).then(data => {
         // 统一数据模型，方便后台接口的改变
-        var url = res.data.data[0].url
+        var url = data.data[0].url
         commit('setAudio')
         commit('setLocation', url)
       })

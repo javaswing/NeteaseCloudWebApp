@@ -35,9 +35,9 @@ export default {
   methods: {
     get () {
       this.loading = true
-      this.$http.get(api.getPlayListByWhere('全部', 'hot', this.offset, true, 6)).then((res) => {
-        var total = res.data.total
-        var list = (res.data.playlists)
+      this.$http.get(api.getPlayListByWhere(this.offset, 6)).then((data) => {
+        var total = data.total
+        var list = (data.playlists)
         for (let i = 0; i < list.length; i++) {
           this.playList.push(list[i])
         }
