@@ -1,7 +1,7 @@
 import axios from 'axios'
 axios.defaults.timeout = 8000
 // 添加请求头
-// axios.defaults.headers.xhrFields = { withCredentials: true }
+axios.defaults.withCredentials = true
 // code状态码200判断
 axios.interceptors.response.use((res) => {
   if (res.status === 654) { // 百度云请求超时检测

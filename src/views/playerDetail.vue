@@ -82,8 +82,6 @@ export default {
   },
   watch: {
     audio (val) {
-      console.log('watch')
-      console.log(val)
       this.loadLrc(val.id)
     }
   },

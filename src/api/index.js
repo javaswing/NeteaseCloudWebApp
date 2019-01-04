@@ -1,4 +1,4 @@
-const _baseUrl = 'http://www.javaswing.cn:7856'
+const _baseUrl = 'http://api.javaswing.cn'
 const _baseUrl2 = 'https://api.imjad.cn/cloudmusic/'
 export default {
   /**
