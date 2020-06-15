@@ -2,7 +2,7 @@
 
 > 这是一个用VUEJS写高仿网易云音乐的webapp，只实现了APP的核心功能，这个项目会长期进行更新。
 
-[在线地址](http://www.javaswing.cn/)
+[在线地址](http://music.javaswing.cn/)
 
 ### 技术栈
 - 传说中的VUE全家桶(vue vue-router vuex)
