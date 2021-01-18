@@ -2187,9 +2187,9 @@ event-emitter@~0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
-eventemitter3@^3.0.0:
-  version "3.1.0"
-  resolved "http://registry.npm.taobao.org/eventemitter3/download/eventemitter3-3.1.0.tgz#090b4d6cdbd645ed10bf750d4b5407942d7ba163"
+eventemitter3@^4.0.0:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
 
 events@^1.0.0:
   version "1.1.1"
@@ -2907,10 +2907,10 @@ http-proxy-middleware@^0.17.2:
     micromatch "^2.3.11"
 
 http-proxy@^1.13.0, http-proxy@^1.16.2:
-  version "1.17.0"
-  resolved "http://registry.npm.taobao.org/http-proxy/download/http-proxy-1.17.0.tgz#7ad38494658f84605e2f6db4436df410f4e5be9a"
+  version "1.18.1"
+  resolved "https://registry.yarnpkg.com/http-proxy/-/http-proxy-1.18.1.tgz#401541f0534884bbf95260334e72f88ee3976549"
   dependencies:
-    eventemitter3 "^3.0.0"
+    eventemitter3 "^4.0.0"
     follow-redirects "^1.0.0"
     requires-port "^1.0.0"
 
@@ -5386,7 +5386,7 @@ require-uncached@^1.0.2:
 
 requires-port@^1.0.0:
   version "1.0.0"
-  resolved "http://registry.npm.taobao.org/requires-port/download/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+  resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
 resolve-from@^1.0.0:
   version "1.0.1"
