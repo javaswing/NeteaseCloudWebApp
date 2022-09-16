@@ -63,7 +63,7 @@
     "karma-sinon-chai": "^1.2.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.26",
-    "karma-webpack": "^1.7.0",
+    "karma-webpack": "^5.0.0",
     "keycode": "^2.1.8",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
